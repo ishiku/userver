@@ -1,5 +1,4 @@
 #include <gtest/gtest.h>
-
 #include <userver/formats/json/validate.hpp>
 #include <userver/formats/json/value.hpp>
 
@@ -124,7 +123,8 @@ TEST(FormatsJsonValidate, ValidInput) {
   auto schemaDocument = formats::json::FromString(kSchemaJson);
   auto jsonDocument = formats::json::FromString(kValidInputJson);
   formats::json::Schema schema(schemaDocument);
-  EXPECT_TRUE(formats::json::Validate(jsonDocument, schema));
+  auto validation_result = formats::json::Validate(jsonDocument, schema);
+  EXPECT_FALSE(validation_result.has_value());
 }
 
 TEST(FormatsJsonValidate, InvalidInput) {
@@ -132,7 +132,9 @@ TEST(FormatsJsonValidate, InvalidInput) {
   auto jsonDocument = formats::json::FromString(kInvalidInputJson);
 
   formats::json::Schema schema(schemaDocument);
-  EXPECT_FALSE(formats::json::Validate(jsonDocument, schema));
+  auto validation_result = formats::json::Validate(jsonDocument, schema);
+  EXPECT_TRUE(validation_result.has_value());
+  EXPECT_TRUE(validation_result.value().HasMember("required"));
 }
 
 USERVER_NAMESPACE_END

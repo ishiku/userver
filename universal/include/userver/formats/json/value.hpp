@@ -3,6 +3,7 @@
 /// @file userver/formats/json/value.hpp
 /// @brief @copybrief formats::json::Value
 
+#include <optional>
 #include <string_view>
 #include <type_traits>
 
@@ -309,7 +310,8 @@ class Value final {
   friend std::string ToStableString(const formats::json::Value&);
   friend std::string ToStableString(formats::json::Value&&);
   friend logging::LogHelper& operator<<(logging::LogHelper&, const Value&);
-  friend bool Validate(const formats::json::Value&, const formats::json::Schema&);
+  friend std::optional<formats::json::Value> Validate(
+      const formats::json::Value&, const formats::json::Schema&);
 };
 
 template <typename T>
